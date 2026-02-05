@@ -1,101 +1,102 @@
 #include <iostream>
-#include <string>
+#include <fstream>
 using namespace std;
 
-class Question {
-public:
-    string qText;
-    string options[4];
-    char correctAns;
 
-    // Simple function to fill the question data
-    void fillData(string t, string o1, string o2, string o3, string o4, char ans) {
-        qText = t;
-        options[0] = o1;
-        options[1] = o2;
-        options[2] = o3;
-        options[3] = o4;
-        correctAns = ans;
-    }
-
-    // Simple function to show the question
-    void show() {
-        cout << "\n" << qText << endl;
-        cout << "A. " << options[0] << "\nB. " << options[1] << endl;
-        cout << "C. " << options[2] << "\nD. " << options[3] << endl;
-    }
-};
-class Exam {
-public:
-    int score;
-
-    int runTest(Question qArray[]) {
-        score = 0;
-        char userAns;
-
-        for (int i = 0; i < 5; i++) {
-            qArray[i].show(); // Show question from Student 1
-            cout << "Enter Choice (A/B/C/D): ";
-            cin >> userAns;
-
-            // Simple if-else to check answer
-            if (userAns == qArray[i].correctAns || userAns == (qArray[i].correctAns + 32)) {
-                cout << "Correct!\n";
-                score = score + 1;
-            } else {
-                cout << "Wrong! The answer was " << qArray[i].correctAns << endl;
-            }
-        }
-        return score;
-    }
-};
-class Result {
-public:
+struct Student {
     string name;
-    string cohort;
-    string rollNo;
-    int marks;
-
-    void display() {
-        cout << name << " | " << cohort << " | " << rollNo << " | Score: " << marks << "/5" << endl;
-    }
+    string cohort;   
+    int roll;
+    int score;
 };
+
+
+struct Question {
+    string question;
+    string optionA;
+    string optionB;
+    string optionC;
+    string optionD;
+    char correct;
+};
+
+
+void saveResult(Student s) {
+    ofstream file("results.txt", ios::app);
+    file << "Name: " << s.name << endl;
+    file << "Cohort: " << s.cohort << endl;   // NEW
+    file << "Roll No: " << s.roll << endl;
+    file << "Score: " << s.score << "/5" << endl;
+    file << "----------------------------" << endl;
+    file.close();
+}
 
 int main() {
-    Question bank[5];
-    Exam myExam;
-    Result studentRecords[10]; // Array to store results of 10 students
-    int totalStudents = 0;
-    int menuChoice;
+    Student s;
+    Question q[5];
+    char answer;
+    char userAnswers[5];
 
-    // Setting up the 5 questions
-    bank[0].fillData("Size of int in C++?", "2 bytes", "4 bytes", "1 byte", "8 bytes", 'B');
-    bank[1].fillData("Which is used for input?", "cout", "cin", "printf", "get", 'B');
-    bank[2].fillData("C++ is a ___ language.", "Low level", "High level", "Script", "None", 'B');
-    bank[3].fillData("Which loop is best for fixed iterations?", "while", "do-while", "for", "if", 'C');
-    bank[4].fillData("Symbol for end of statement?", ":", ",", ".", ";", 'D');
+    cout << "Enter Student Name: ";
+    getline(cin, s.name);
 
-    while (true) {
-        cout << "\n1. Start Exam\n2. View All Results\n3. Exit\nChoice: ";
-        cin >> menuChoice;
+    cout << "Enter Cohort : ";
+    getline(cin, s.cohort);   // NEW
 
-        if (menuChoice == 1) {
-            cout << "Enter Name: "; cin >> studentRecords[totalStudents].name;
-            cout << "Enter Cohort: "; cin >> studentRecords[totalStudents].cohort;
-            cout << "Enter Roll No: "; cin >> studentRecords[totalStudents].rollNo;
+    cout << "Enter Roll Number: ";
+    cin >> s.roll;
 
-            studentRecords[totalStudents].marks = myExam.runTest(bank);
-            totalStudents++; 
-        } 
-        else if (menuChoice == 2) {
-            cout << "\n--- SCOREBOARD ---\n";
-            for (int i = 0; i < totalStudents; i++) {
-                studentRecords[i].display();
-            }
-        } 
-        else {
-            break;
+    s.score = 0;
+
+    q[0] = {"What is C++?", "A) Programming Language", "B) Game", "C) OS", "D) Browser", 'A'};
+    q[1] = {"Which symbol is used for comments?", "A) //", "B) #", "C) /*", "D) $", 'A'};
+    q[2] = {"Which loop runs at least once?", "A) for", "B) while", "C) do-while", "D) if", 'C'};
+    q[3] = {"Which keyword defines a structure?", "A) class", "B) struct", "C) define", "D) array", 'B'};
+    q[4] = {"Which file handles output?", "A) ifstream", "B) cin", "C) ofstream", "D) cout", 'C'};
+
+    cout << "\n--- Online Examination Started ---\n";
+   
+    for (int i = 0; i < 5; i++) {
+        cout << "\nQ" << i + 1 << ": " << q[i].question << endl;
+        cout << q[i].optionA << endl;
+        cout << q[i].optionB << endl;
+        cout << q[i].optionC << endl;
+        cout << q[i].optionD << endl;
+
+        cout << "Enter your answer (A/B/C/D): ";
+        cin >> answer;
+
+        if (answer >= 'a' && answer <= 'z') {
+            answer = answer - 32;
+        }
+
+        userAnswers[i] = answer;
+    }
+
+    for (int i = 0; i < 5; i++) {
+        if (userAnswers[i] == q[i].correct) {
+            s.score++;
         }
     }
+    
+    cout << "\n--- Exam Completed ---" << endl;
+    cout << "Name: " << s.name << endl;
+    cout << "Cohort: " << s.cohort << endl;   // NEW
+    cout << "Your Score: " << s.score << "/5" << endl;
+
+    cout << "\n--- Answer Summary ---\n";
+    for (int i = 0; i < 5; i++) {
+        cout << "Q" << i + 1 << ": ";
+        if (userAnswers[i] == q[i].correct) {
+            cout << "Right ✔️" << endl;
+        } else {
+            cout << "Wrong ❌ (Correct: " << q[i].correct << ")" << endl;
+        }
+    }
+
+ 
+    saveResult(s);
+    cout << "\nResult saved successfully!" << endl;
+
     return 0;
 }
