@@ -1,0 +1,25 @@
+{
+  "cities": [
+    {
+      "name": "Mumbai",
+      "temperature": 32,
+      "humidity": 70,
+      "wind": 5,
+      "description": "Humid and Sunny"
+    },
+    {
+      "name": "Delhi",
+      "temperature": 38,
+      "humidity": 45,
+      "wind": 3,
+      "description": "Hot and Dry"
+    },
+    {
+      "name": "Shimla",
+      "temperature": 12,
+      "humidity": 60,
+      "wind": 7,
+      "description": "Cold and Cloudy"
+    }
+  ]
+}

@@ -2,14 +2,12 @@
 #include <fstream>
 using namespace std;
 
-
 struct Student {
     string name;
-    string cohort;   
+    string cohort;
     int roll;
     int score;
 };
-
 
 struct Question {
     string question;
@@ -20,34 +18,54 @@ struct Question {
     char correct;
 };
 
-
 void saveResult(Student s) {
     ofstream file("results.txt", ios::app);
+
     file << "Name: " << s.name << endl;
-    file << "Cohort: " << s.cohort << endl;   // NEW
+    file << "Cohort: " << s.cohort << endl;
     file << "Roll No: " << s.roll << endl;
     file << "Score: " << s.score << "/5" << endl;
-    file << "----------------------------" << endl;
+    file << "----------------------" << endl;
+
     file.close();
 }
 
 int main() {
+
     Student s;
     Question q[5];
-    char answer;
     char userAnswers[5];
+    string rollInput;
+    string input;
 
     cout << "Enter Student Name: ";
     getline(cin, s.name);
 
-    cout << "Enter Cohort : ";
-    getline(cin, s.cohort);   // NEW
+    cout << "Enter Cohort: ";
+    getline(cin, s.cohort);
 
-    cout << "Enter Roll Number: ";
-    cin >> s.roll;
+    // Roll number validation (basic method)
+    bool valid = false;
 
+    while (!valid) {
+        cout << "Enter Roll Number: ";
+        cin >> rollInput;
+
+        valid = true;
+
+        for (int i = 0; i < rollInput.length(); i++) {
+            if (rollInput[i] < '0' || rollInput[i] > '9') {
+                valid = false;
+                cout << "Error: Roll number must contain only numbers!" << endl;
+                break;
+            }
+        }
+    }
+
+    s.roll = stoi(rollInput);
     s.score = 0;
 
+    // Initialize questions
     q[0] = {"What is C++?", "A) Programming Language", "B) Game", "C) OS", "D) Browser", 'A'};
     q[1] = {"Which symbol is used for comments?", "A) //", "B) #", "C) /*", "D) $", 'A'};
     q[2] = {"Which loop runs at least once?", "A) for", "B) while", "C) do-while", "D) if", 'C'};
@@ -55,8 +73,9 @@ int main() {
     q[4] = {"Which file handles output?", "A) ifstream", "B) cin", "C) ofstream", "D) cout", 'C'};
 
     cout << "\n--- Online Examination Started ---\n";
-   
+
     for (int i = 0; i < 5; i++) {
+
         cout << "\nQ" << i + 1 << ": " << q[i].question << endl;
         cout << q[i].optionA << endl;
         cout << q[i].optionB << endl;
@@ -64,8 +83,11 @@ int main() {
         cout << q[i].optionD << endl;
 
         cout << "Enter your answer (A/B/C/D): ";
-        cin >> answer;
+        cin >> input;
 
+        char answer = input[0];
+
+        // Convert lowercase to uppercase manually
         if (answer >= 'a' && answer <= 'z') {
             answer = answer - 32;
         }
@@ -73,28 +95,32 @@ int main() {
         userAnswers[i] = answer;
     }
 
+    // Calculate score
     for (int i = 0; i < 5; i++) {
         if (userAnswers[i] == q[i].correct) {
             s.score++;
         }
     }
-    
+
+    // Display result
     cout << "\n--- Exam Completed ---" << endl;
     cout << "Name: " << s.name << endl;
-    cout << "Cohort: " << s.cohort << endl;   // NEW
+    cout << "Cohort: " << s.cohort << endl;
     cout << "Your Score: " << s.score << "/5" << endl;
 
+    // Display summary
     cout << "\n--- Answer Summary ---\n";
+
     for (int i = 0; i < 5; i++) {
         cout << "Q" << i + 1 << ": ";
+
         if (userAnswers[i] == q[i].correct) {
-            cout << "Right ✔️" << endl;
+            cout << "Right" << endl;
         } else {
-            cout << "Wrong ❌ (Correct: " << q[i].correct << ")" << endl;
+            cout << "Wrong (Correct: " << q[i].correct << ")" << endl;
         }
     }
 
- 
     saveResult(s);
     cout << "\nResult saved successfully!" << endl;
 

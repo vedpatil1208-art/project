@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Weather & Climate (JSON Project)</title>
+    <link rel="stylesheet" href="project.css">
+</head>
+<body>
+
+<div class="container">
+    <h1>Weather & Climate Checker</h1>
+
+    <select id="citySelect">
+        <option value="">Select City</option>
+        <option value="Mumbai">Mumbai</option>
+        <option value="Delhi">Delhi</option>
+        <option value="Shimla">Shimla</option>
+    </select>
+
+    <button onclick="loadWeather()">Check Weather</button>
+
+    <div id="result" class="hidden">
+        <h2 id="cityName"></h2>
+        <p id="temp"></p>
+        <p id="humidity"></p>
+        <p id="wind"></p>
+        <p id="desc"></p>
+        <p id="climate"></p>
+    </div>
+</div>
+
+<script src="project.js"></script>
+</body>
+</html>
