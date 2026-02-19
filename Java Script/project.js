@@ -1,45 +1,44 @@
 function loadWeather() {
 
-    const chosenCity = document.getElementById("citySelect").value;
+    const selectedOption = document.getElementById("citySelect").value;
 
-    if (chosenCity === "") {
+    if (selectedOption === "") {
         alert("Please select a city");
         return;
     }
 
     fetch("project.json")
-        .then(res => res.json())
-        .then(jsonData => {
+        .then(response => response.json())
+        .then(data => {
 
-            const cityList = jsonData.cities;
+            const citiesArray = data.cities;
 
-            const selectedCityData = cityList.find(item => item.name === chosenCity);
+            const matchedCity = citiesArray.find(city => city.name === selectedOption);
 
-            if (selectedCityData) {
+            if (matchedCity) {
 
-                document.getElementById("cityName").innerText = selectedCityData.name;
-                document.getElementById("temp").innerText = "Temperature: " + selectedCityData.temperature + " °C";
-                document.getElementById("humidity").innerText = "Humidity: " + selectedCityData.humidity + " %";
-                document.getElementById("wind").innerText = "Wind Speed: " + selectedCityData.wind + " m/s";
-                document.getElementById("desc").innerText = "Weather: " + selectedCityData.description;
+                document.getElementById("cityName").innerText = matchedCity.name;
+                document.getElementById("temp").innerText = "Temperature: " + matchedCity.temperature + " °C";
+                document.getElementById("humidity").innerText = "Humidity: " + matchedCity.humidity + " %";
+                document.getElementById("wind").innerText = "Wind Speed: " + matchedCity.wind + " m/s";
+                document.getElementById("desc").innerText = "Weather: " + matchedCity.description;
 
-                // Climate Type Logic
-                let weatherCategory = "";
+                let climateLabel = "";
 
-                if (selectedCityData.temperature >= 35) {
-                    weatherCategory = "Very Hot Climate";
+                if (matchedCity.temperature >= 35) {
+                    climateLabel = "Very Hot Climate";
                 } 
-                else if (selectedCityData.temperature >= 25) {
-                    weatherCategory = "Warm Climate";
+                else if (matchedCity.temperature >= 25) {
+                    climateLabel = "Warm Climate";
                 } 
-                else if (selectedCityData.temperature >= 15) {
-                    weatherCategory = "Moderate Climate";
+                else if (matchedCity.temperature >= 15) {
+                    climateLabel = "Moderate Climate";
                 } 
                 else {
-                    weatherCategory = "Cold Climate";
+                    climateLabel = "Cold Climate";
                 }
 
-                document.getElementById("climate").innerText = "Climate Type: " + weatherCategory;
+                document.getElementById("climate").innerText = "Climate Type: " + climateLabel;
 
                 document.getElementById("result").classList.remove("hidden");
 
@@ -48,7 +47,7 @@ function loadWeather() {
             }
 
         })
-        .catch(err => {
+        .catch(error => {
             alert("Error loading JSON file");
         });
 }
